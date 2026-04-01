@@ -1,0 +1,244 @@
+console.log("🔥 APP INICIO");
+
+(function () {
+
+    // ==============================
+    // 🔥 UTIL: CARGA HTML (SYNC)
+    // ==============================
+    function loadHtml(path) {
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", path, false);
+        xhr.send(null);
+
+        if (xhr.status === 200 || xhr.status === 0) {
+            return xhr.responseText;
+        }
+
+        throw new Error("Error cargando HTML: " + path);
+    }
+
+    // ==============================
+    // APP ROUTER
+    // ==============================
+    const App = {
+
+        currentModule: null,
+        currentController: null,
+
+        loadModule(moduleName) {
+            try {
+                console.log("📦 Cargando módulo:", moduleName);
+
+                const container = document.getElementById("app-content");
+                // 🔥 DESTRUIR CONTROLLER ANTES DE CAMBIAR EL DOM
+                if (App.currentController && App.currentController.destroy) {
+                    try {
+                        App.currentController.destroy();
+                    } catch (err) {
+                        console.warn("⚠ Error en destroy:", err);
+                    }
+                }
+                if (!container) {
+                    throw new Error("Container #app-content NO existe en el DOM");
+                }
+
+                // limpiar contenido anterior
+                container.innerHTML = "";
+
+                // 🔥 ocultar dashboard SIEMPRE
+                const dashboard = document.getElementById("dashboard");
+                if (dashboard) dashboard.style.display = "none";
+
+                // 🔥 cargar HTML
+                const html = loadHtml(`modules/${moduleName}/${moduleName}.view.html`);
+
+                container.innerHTML = html;
+                // =========================
+                // 🔥 CLICK EN TARJETAS HOME
+                // =========================
+                if (moduleName === "inicio") {
+
+                    setTimeout(() => {
+                        const cards = document.querySelectorAll(".home-module-card");
+
+                        console.log("🏠 Cards inicio encontradas:", cards.length);
+
+                        cards.forEach(card => {
+                            card.addEventListener("click", () => {
+
+                                const target = card.getAttribute("data-module-target");
+
+                                if (!target) {
+                                    console.warn("⚠ Card sin destino");
+                                    return;
+                                }
+
+                                console.log("👉 Navegando a:", target);
+
+                                App.loadModule(target);
+                            });
+                        });
+
+                    }, 50); // pequeño delay para asegurar render
+
+                }
+
+                // =========================
+                // 🔥 CARGAR CONTROLLER
+                // =========================
+
+                const oldScript = document.getElementById("module-script");
+                if (oldScript) oldScript.remove();
+
+                const script = document.createElement("script");
+                script.id = "module-script";
+                script.src = `modules/${moduleName}/${moduleName}.controller.js`;
+
+                script.onload = () => {
+                    console.log("✔ Controller cargado");
+
+                    const controllerName = moduleName
+                        .split("-")
+                        .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+                        .join("") + "Controller";
+
+                    if (window[controllerName]) {
+                        try {
+
+
+                            App.currentController = new window[controllerName]();
+                            App.currentController.init();
+
+                            // 🔥 SOLO EN INICIO → OCULTAR SPLASH
+                            if (moduleName === "inicio") {
+                                setTimeout(() => hideSplash(), 300);
+                            }
+
+                        } catch (err) {
+                            console.error("❌ Error ejecutando controller:", err);
+                        }
+                    } else {
+                        console.warn("⚠ Controller no encontrado:", controllerName);
+                    }
+                };
+
+                script.onerror = () => {
+                    console.error("❌ Error cargando controller JS:", moduleName);
+                    alert("Error cargando controller: " + moduleName);
+                };
+
+                document.body.appendChild(script);
+
+                this.currentModule = moduleName;
+
+            } catch (error) {
+                console.error("❌ Error cargando módulo:", moduleName, error);
+                alert("Error cargando módulo: " + moduleName + "\n" + error.message);
+            }
+        }
+    };
+
+    // ==============================
+    // SIDEBAR
+    // ==============================
+    function initSidebar() {
+
+        console.log("🚀 Inicializando sidebar");
+
+        const buttons = document.querySelectorAll("[data-module]");
+
+        console.log("Botones encontrados:", buttons.length);
+
+        if (!buttons.length) {
+            console.error("❌ No se encontraron botones del sidebar");
+            return;
+        }
+
+        buttons.forEach(btn => {
+            btn.addEventListener("click", () => {
+                const module = btn.getAttribute("data-module");
+
+                if (!module) {
+                    console.warn("⚠ Botón sin data-module");
+                    return;
+                }
+
+                console.log("👉 Click en módulo:", module);
+                App.loadModule(module);
+            });
+        });
+    }
+
+    function initApp() {
+        console.log("🔥 INIT APP");
+
+        const container = document.getElementById("app-content");
+
+        if (!container) {
+            console.error("❌ #app-content no existe en HTML");
+            return;
+        }
+
+        initSidebar();
+        App.loadModule("inicio");
+
+    }
+
+    // ==============================
+    // START
+    // ==============================
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initApp);
+    } else {
+        initApp();
+    }
+    // =========================
+    // SPLASH SCREEN CONTROL (PRO)
+    // =========================
+    function hideSplash() {
+
+        const splash = document.getElementById("splash-screen")
+        const text = document.getElementById("splash-text")
+        const progress = document.getElementById("progress-fill")
+        if (!splash) return
+
+        const steps = [
+            { text: "Iniciando sistema...", progress: 20 },
+            { text: "Cargando módulos...", progress: 50 },
+            { text: "Conectando a servicios...", progress: 80 },
+            { text: "Bienvenido 🚀", progress: 100 }
+        ]
+
+        let i = 0
+
+        const interval = setInterval(() => {
+
+            if (text && steps[i]) {
+                text.innerText = steps[i].text;
+
+                if (progress) {
+                    progress.style.width = steps[i].progress + "%";
+                }
+            }
+
+            i++
+
+            if (i >= steps.length) {
+                clearInterval(interval)
+
+                setTimeout(() => {
+                    splash.style.opacity = "0"
+
+                    setTimeout(() => {
+                        splash.remove()
+                    }, 800)
+
+                }, 800)
+            }
+
+        }, 700)
+    }
+
+
+})();
+
