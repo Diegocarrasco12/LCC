@@ -10,6 +10,7 @@
 
   <!-- DEPENDENCIAS -->
   <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.1.0" />
     <PackageReference Include="ClosedXML" Version="0.105.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="2.3.9" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.4" />
@@ -21,12 +22,12 @@
   <ItemGroup>
 
     <None Remove="src/UI/www/**" />
-  
+
     <Content Include="src/UI/www/**/*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-  
+
   </ItemGroup>
 
 </Project>

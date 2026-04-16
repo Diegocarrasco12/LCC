@@ -21,7 +21,7 @@
 </head>
 
 <body>
-    
+
     <!-- ========================= -->
     <!-- SPLASH SCREEN -->
     <!-- ========================= -->
@@ -42,7 +42,7 @@
     <!-- ========================= -->
     <!-- SIDEBAR -->
     <!-- ========================= -->
-    <div class="sidebar">
+    <div class="sidebar" id="sidebar">
         <div>
             <div class="logo">Logistic Control</div>
             <div class="subtitle">Operations Center</div>
@@ -56,16 +56,27 @@
                 <button data-module="bins-lavado">🧼 Lavado BINS</button>
                 <button data-module="palets">📄 Palets</button>
                 <button data-module="bins-print">🖨 Impresión QR BINS</button>
+                <button id="btn-usuarios" data-module="usuarios" style="display: none;">👥 Gestión de Usuarios</button>
             </div>
         </div>
 
-        <div class="version">Version 0.1.0</div>
+        <div class="sidebar-bottom">
+            <div class="sidebar-session-box">
+                <div class="sidebar-session-label">Sesión activa</div>
+                <div id="sidebar-username" class="sidebar-username">-</div>
+                <button id="logout-btn" class="sidebar-logout-btn" type="button">
+                    Cerrar sesión
+                </button>
+            </div>
+
+            <div class="version">Version 0.1.0</div>
+        </div>
     </div>
 
     <!-- ========================= -->
     <!-- MAIN -->
     <!-- ========================= -->
-    <div class="main">
+    <div class="main" id="main-layout">
 
         <div class="header">
             <div class="title">Panel Operacional</div>

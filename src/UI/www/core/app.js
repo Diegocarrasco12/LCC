@@ -48,11 +48,41 @@ console.log("🔥 APP INICIO");
                 // 🔥 ocultar dashboard SIEMPRE
                 const dashboard = document.getElementById("dashboard");
                 if (dashboard) dashboard.style.display = "none";
+                // 🔥 controlar visibilidad layout según módulo
+                const sidebar = document.getElementById("sidebar");
+                const mainLayout = document.getElementById("main-layout");
 
+                if (moduleName === "auth") {
+                    if (sidebar) sidebar.style.display = "none";
+                    if (mainLayout) mainLayout.style.marginLeft = "0";
+                } else {
+                    if (sidebar) sidebar.style.display = "flex";
+                    if (mainLayout) mainLayout.style.marginLeft = "260px";
+                    refreshSidebarState();
+                }
                 // 🔥 cargar HTML
                 const html = loadHtml(`modules/${moduleName}/${moduleName}.view.html`);
 
                 container.innerHTML = html;
+
+                // =========================
+                // 🔥 CSS EXCLUSIVO SOLO PARA AUTH
+                // =========================
+                const oldAuthCss = document.getElementById("auth-module-css");
+
+                if (moduleName === "auth") {
+                    if (!oldAuthCss) {
+                        const link = document.createElement("link");
+                        link.id = "auth-module-css";
+                        link.rel = "stylesheet";
+                        link.href = "modules/auth/auth.css";
+                        document.head.appendChild(link);
+                    }
+                } else {
+                    if (oldAuthCss) {
+                        oldAuthCss.remove();
+                    }
+                }
                 // =========================
                 // 🔥 CLICK EN TARJETAS HOME
                 // =========================
@@ -109,8 +139,8 @@ console.log("🔥 APP INICIO");
                             App.currentController = new window[controllerName]();
                             App.currentController.init();
 
-                            // 🔥 SOLO EN INICIO → OCULTAR SPLASH
-                            if (moduleName === "inicio") {
+                            // 🔥 OCULTAR SPLASH AL CARGAR EL PRIMER MÓDULO VÁLIDO
+                            if (moduleName === "inicio" || moduleName === "auth") {
                                 setTimeout(() => hideSplash(), 300);
                             }
 
@@ -137,22 +167,47 @@ console.log("🔥 APP INICIO");
             }
         }
     };
+    window.App = App;
+
 
     // ==============================
     // SIDEBAR
     // ==============================
+    function refreshSidebarState() {
+        const usuariosBtn = document.getElementById("btn-usuarios");
+        const sidebarUsername = document.getElementById("sidebar-username");
+    
+        const rolUsuario = sessionStorage.getItem("rolUsuario");
+        const nombreUsuario = sessionStorage.getItem("nombreUsuario");
+        const codigoUsuario = sessionStorage.getItem("codigoUsuario");
+    
+        if (sidebarUsername) {
+            sidebarUsername.innerText = nombreUsuario || codigoUsuario || "-";
+        }
+    
+        if (usuariosBtn) {
+            if (rolUsuario === "admin" || rolUsuario === "admin_ti") {
+                usuariosBtn.style.display = "block";
+            } else {
+                usuariosBtn.style.display = "none";
+            }
+        }
+    }
     function initSidebar() {
 
         console.log("🚀 Inicializando sidebar");
 
         const buttons = document.querySelectorAll("[data-module]");
+        const logoutBtn = document.getElementById("logout-btn");
+
 
         console.log("Botones encontrados:", buttons.length);
 
         if (!buttons.length) {
             console.error("❌ No se encontraron botones del sidebar");
-            return;
         }
+        refreshSidebarState();
+      
 
         buttons.forEach(btn => {
             btn.addEventListener("click", () => {
@@ -167,6 +222,40 @@ console.log("🔥 APP INICIO");
                 App.loadModule(module);
             });
         });
+
+        if (logoutBtn) {
+            logoutBtn.addEventListener("click", () => {
+                console.log("🔓 Cerrando sesión...");
+
+                // 🔹 mensaje visual simple
+                const message = document.createElement("div");
+                message.innerText = "✔ Sesión cerrada correctamente";
+                message.style.position = "fixed";
+                message.style.bottom = "20px";
+                message.style.right = "20px";
+                message.style.background = "#111827";
+                message.style.color = "#fff";
+                message.style.padding = "12px 18px";
+                message.style.borderRadius = "8px";
+                message.style.fontSize = "14px";
+                message.style.boxShadow = "0 4px 12px rgba(0,0,0,0.2)";
+                message.style.zIndex = "9999";
+
+                document.body.appendChild(message);
+
+                // 🔹 limpiar sesión
+                sessionStorage.removeItem("isLoggedIn");
+                sessionStorage.removeItem("codigoUsuario");
+                sessionStorage.removeItem("nombreUsuario");
+                sessionStorage.removeItem("rolUsuario");
+
+                // 🔹 delay profesional
+                setTimeout(() => {
+                    message.remove();
+                    App.loadModule("auth");
+                }, 700);
+            });
+        }
     }
 
     function initApp() {
@@ -180,7 +269,7 @@ console.log("🔥 APP INICIO");
         }
 
         initSidebar();
-        App.loadModule("inicio");
+        App.loadModule("auth");
 
     }
 
