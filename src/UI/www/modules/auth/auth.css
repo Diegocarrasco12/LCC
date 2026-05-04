@@ -28,14 +28,32 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 22px;
+  }
+  
+  .auth-brand-dual {
+    gap: 18px;
   }
   
   .auth-logo {
-    width: 220px;
     max-width: 100%;
     height: auto;
     display: block;
+    object-fit: contain;
+  }
+  
+  .auth-logo-innpack {
+    width: 170px;
+  }
+  
+  .auth-logo-faret {
+    width: 125px;
+  }
+  
+  .auth-logo-divider {
+    width: 1px;
+    height: 46px;
+    background: #e5e7eb;
   }
   
   .auth-header {
@@ -165,8 +183,20 @@
       border-radius: 16px;
     }
   
-    .auth-logo {
-      width: 180px;
+    .auth-brand-dual {
+      gap: 12px;
+    }
+    
+    .auth-logo-innpack {
+      width: 135px;
+    }
+    
+    .auth-logo-faret {
+      width: 100px;
+    }
+    
+    .auth-logo-divider {
+      height: 38px;
     }
   
     .auth-header h2 {

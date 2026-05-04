@@ -1,8 +1,8 @@
-using MySqlConnector;
-using Microsoft.Data.SqlClient;
 using System;
 using System.IO;
 using System.Text.Json;
+using Microsoft.Data.SqlClient;
+using MySqlConnector;
 
 namespace LogisticControlCenter.Services
 {
@@ -50,7 +50,7 @@ namespace LogisticControlCenter.Services
                 MaximumPoolSize = 25,
 
                 ConnectionTimeout = 5,
-                DefaultCommandTimeout = 30
+                DefaultCommandTimeout = 30,
             };
 
             return new MySqlConnection(builder.ConnectionString);
@@ -81,7 +81,38 @@ namespace LogisticControlCenter.Services
                 MaximumPoolSize = 25,
 
                 ConnectionTimeout = 5,
-                DefaultCommandTimeout = 30
+                DefaultCommandTimeout = 30,
+            };
+
+            return new MySqlConnection(builder.ConnectionString);
+        }
+
+        /* =========================================
+   MYSQL - REGISTRO PALETIZADO
+========================================= */
+
+        public MySqlConnection GetRegistroPaletizadoConnection()
+        {
+            var builder = new MySqlConnectionStringBuilder
+            {
+                Server = _settings.MySqlHost,
+                Database = "registro_paletizado",
+                UserID = _settings.MySqlUser,
+                Password = _settings.MySqlPassword,
+
+                CharacterSet = "utf8mb4",
+
+                AllowPublicKeyRetrieval = true,
+                AllowUserVariables = true,
+
+                SslMode = MySqlSslMode.None,
+
+                Pooling = true,
+                MinimumPoolSize = 0,
+                MaximumPoolSize = 25,
+
+                ConnectionTimeout = 5,
+                DefaultCommandTimeout = 30,
             };
 
             return new MySqlConnection(builder.ConnectionString);
@@ -105,7 +136,7 @@ namespace LogisticControlCenter.Services
 
                 ConnectTimeout = 5,
 
-                ApplicationName = "LogisticControlCenter"
+                ApplicationName = "LogisticControlCenter",
             };
 
             return new SqlConnection(builder.ConnectionString);
@@ -119,7 +150,8 @@ namespace LogisticControlCenter.Services
         {
             using var cmd = conn.CreateCommand();
 
-            cmd.CommandText = @"
+            cmd.CommandText =
+                @"
                 SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
                 SET NOCOUNT ON;
             ";
@@ -155,7 +187,7 @@ namespace LogisticControlCenter.Services
         {
             try
             {
-var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.json");
+                var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.json");
                 if (!File.Exists(path))
                 {
                     Console.WriteLine("⚠️ config.json no encontrado, usando valores por defecto");

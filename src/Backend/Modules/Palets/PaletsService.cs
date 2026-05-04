@@ -26,15 +26,7 @@ namespace LogisticControlCenter.Modules.Palets
             string tipo
         )
         {
-            return _repo.ObtenerRegistros(
-                page,
-                limit,
-                fechaDesde,
-                fechaHasta,
-                lote,
-                planta,
-                tipo
-            );
+            return _repo.ObtenerRegistros(page, limit, fechaDesde, fechaHasta, lote, planta, tipo);
         }
 
         // =========================
@@ -52,24 +44,25 @@ namespace LogisticControlCenter.Modules.Palets
         {
             return _repo.ObtenerKPIUltimoDia();
         }
+
         // =========================
-// EXPORTAR EXCEL
-// =========================
-public async Task<string> ExportarExcel(
-    string fechaDesde,
-    string fechaHasta,
-    string lote,
-    string planta,
-    string tipo
-)
-{
-    return await _repo.ExportarExcel(
-        fechaDesde?.Trim() ?? "",
-        fechaHasta?.Trim() ?? "",
-        lote?.Trim() ?? "",
-        planta?.Trim() ?? "",
-        tipo?.Trim() ?? ""
-    );
-}
+        // EXPORTAR EXCEL
+        // =========================
+        public async Task<string> ExportarExcel(
+            string fechaDesde,
+            string fechaHasta,
+            string lote,
+            string planta,
+            string tipo
+        )
+        {
+            return await _repo.ExportarExcel(
+                fechaDesde?.Trim() ?? "",
+                fechaHasta?.Trim() ?? "",
+                lote?.Trim() ?? "",
+                planta?.Trim() ?? "",
+                tipo?.Trim() ?? ""
+            );
+        }
     }
 }

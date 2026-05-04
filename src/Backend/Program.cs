@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using LogisticControlCenter.Backend.Services;
 using LogisticControlCenter.Config;
 using LogisticControlCenter.Modules.Auth;
 using LogisticControlCenter.Repositories.Auth;
@@ -43,14 +45,25 @@ namespace LogisticControlCenter
                 // =========================
                 // 📂 RUTA INDEX.HTML
                 // =========================
-                var root = Directory.GetCurrentDirectory();
+                var root = AppContext.BaseDirectory;
                 var indexPath = Path.Combine(root, "src", "UI", "www", "index.html");
 
                 Console.WriteLine($"📂 Cargando HTML desde: {indexPath}");
 
                 if (!File.Exists(indexPath))
                 {
-                    Console.WriteLine("❌ ERROR: index.html no encontrado");
+                    var appDataDir = Path.Combine(
+                        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                        "LogisticControlCenter"
+                    );
+
+                    Directory.CreateDirectory(appDataDir);
+
+                    var logPath = Path.Combine(appDataDir, "startup-error.log");
+                    File.AppendAllText(logPath, "ERROR: index.html no encontrado\n");
+                    File.AppendAllText(logPath, $"BaseDirectory: {AppContext.BaseDirectory}\n");
+                    File.AppendAllText(logPath, $"IndexPath: {indexPath}\n\n");
+
                     return;
                 }
 
@@ -122,6 +135,37 @@ namespace LogisticControlCenter
                         }
                     }
                 );
+                // =========================
+                // 🔄 CHECK UPDATE NATIVO
+                // =========================
+                try
+                {
+                    var updateService = new UpdateService();
+
+                    if (updateService.IsUpdateAvailable(out var updateInfo) && updateInfo != null)
+                    {
+                        MessageBoxW(
+                            IntPtr.Zero,
+                            $"Hemos detectado una actualización disponible.\n\nVersión nueva: {updateInfo.Version}\n\nSe iniciará el instalador para actualizar Logistic Control Center.",
+                            "Actualización disponible",
+                            0
+                        );
+
+                        System.Diagnostics.Process.Start(
+                            new System.Diagnostics.ProcessStartInfo
+                            {
+                                FileName = updateInfo.Installer,
+                                UseShellExecute = true,
+                            }
+                        );
+
+                        Environment.Exit(0);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"ERROR UPDATE: {ex.Message}");
+                }
 
                 // =========================
                 // 🚀 RUN
@@ -143,5 +187,8 @@ namespace LogisticControlCenter
 
             window.SendWebMessage(JsonSerializer.Serialize(errorResponse));
         }
+
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+        static extern int MessageBoxW(IntPtr hWnd, string text, string caption, uint type);
     }
 }

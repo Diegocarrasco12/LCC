@@ -703,6 +703,26 @@ html, body {
     grid-template-columns: 2fr 1fr;
     gap: 20px;
 }
+.splash-logos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 22px;
+    margin-bottom: 15px;
+}
+
+.splash-logo {
+    margin-bottom: 0;
+    object-fit: contain;
+}
+
+.splash-logo-innpack {
+    width: 140px;
+}
+
+.splash-logo-faret {
+    width: 110px;
+}
 
 /* =========================
    RESPONSIVE
@@ -754,7 +774,7 @@ html, body {
     opacity: 0.8;
 }
 .progress-bar {
-    width: 250px;
+    width: 330px;
     height: 6px;
     background: rgba(255,255,255,0.1);
     border-radius: 10px;
@@ -769,9 +789,9 @@ html, body {
     transition: width 0.4s ease;
 }
 .splash-logo {
-    width: 150px;
-    margin-bottom: 15px;
-    opacity: 0.9;
+    margin-bottom: 0;
+    opacity: 0.95;
+    object-fit: contain;
 }
 
 .splash-sub {

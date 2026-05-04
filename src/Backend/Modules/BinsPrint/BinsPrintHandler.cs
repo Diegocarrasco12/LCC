@@ -1,5 +1,5 @@
-using System.Text.Json;
 using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace LogisticControlCenter.Modules.BinsPrint
@@ -21,11 +21,7 @@ namespace LogisticControlCenter.Modules.BinsPrint
                     return await Imprimir(data);
 
                 default:
-                    return JsonSerializer.Serialize(new
-                    {
-                        ok = false,
-                        error = "Acción no válida"
-                    });
+                    return JsonSerializer.Serialize(new { ok = false, error = "Acción no válida" });
             }
         }
 
@@ -33,25 +29,17 @@ namespace LogisticControlCenter.Modules.BinsPrint
         {
             try
             {
-                var bin = data != null && data.ContainsKey("bin")
-                    ? data["bin"]?.ToString()
-                    : "";
+                var bin = data != null && data.ContainsKey("bin") ? data["bin"]?.ToString() : "";
 
                 var result = _service.Imprimir(bin ?? "");
 
-                return Task.FromResult(JsonSerializer.Serialize(new
-                {
-                    ok = true,
-                    data = result
-                }));
+                return Task.FromResult(JsonSerializer.Serialize(new { ok = true, data = result }));
             }
             catch (System.Exception ex)
             {
-                return Task.FromResult(JsonSerializer.Serialize(new
-                {
-                    ok = false,
-                    error = ex.Message
-                }));
+                return Task.FromResult(
+                    JsonSerializer.Serialize(new { ok = false, error = ex.Message })
+                );
             }
         }
     }

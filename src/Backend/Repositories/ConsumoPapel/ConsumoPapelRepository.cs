@@ -1,6 +1,6 @@
-using MySqlConnector;
-using LogisticControlCenter.Services;
 using LogisticControlCenter.Modules.ConsumoPapel;
+using LogisticControlCenter.Services;
+using MySqlConnector;
 
 namespace LogisticControlCenter.Repositories.ConsumoPapel
 {
@@ -22,7 +22,8 @@ namespace LogisticControlCenter.Repositories.ConsumoPapel
             string fechaDesde,
             string fechaHasta,
             string codigo,
-            string lote)
+            string lote
+        )
         {
             var result = new ConsumoPapelPagedResult();
 
@@ -39,10 +40,10 @@ namespace LogisticControlCenter.Repositories.ConsumoPapel
             }
 
             if (!string.IsNullOrEmpty(fechaHasta))
-{
-    where.Add("fecha < @hasta");
-    parameters.Add(new MySqlParameter("@hasta", DateTime.Parse(fechaHasta).AddDays(1)));
-}
+            {
+                where.Add("fecha < @hasta");
+                parameters.Add(new MySqlParameter("@hasta", DateTime.Parse(fechaHasta).AddDays(1)));
+            }
 
             if (!string.IsNullOrEmpty(codigo))
             {
@@ -56,13 +57,12 @@ namespace LogisticControlCenter.Repositories.ConsumoPapel
                 parameters.Add(new MySqlParameter("@lote", $"%{lote}%"));
             }
 
-            string whereSql = where.Count > 0
-                ? "WHERE " + string.Join(" AND ", where)
-                : "";
+            string whereSql = where.Count > 0 ? "WHERE " + string.Join(" AND ", where) : "";
 
             int offset = (page - 1) * limit;
 
-            string sql = $@"
+            string sql =
+                $@"
                 SELECT 
                     id,
                     fecha,
@@ -95,20 +95,34 @@ namespace LogisticControlCenter.Repositories.ConsumoPapel
 
             while (await reader.ReadAsync())
             {
-                items.Add(new ConsumoPapelItem
-                {
-                    Id = reader["id"] != DBNull.Value ? Convert.ToInt32(reader["id"]) : 0,
-                    Fecha = reader["fecha"] != DBNull.Value ? Convert.ToDateTime(reader["fecha"]) : DateTime.MinValue,
-                    Descripcion = reader["descripcion"]?.ToString() ?? "",
-                    Codigo = reader["codigo"]?.ToString() ?? "",
-                    ConsumoKg = reader["consumo_kg"] != DBNull.Value ? Convert.ToDecimal(reader["consumo_kg"]) : 0,
-                    NP = reader["np"]?.ToString() ?? "",
-                    TarjaKg = reader["tarja_kg"] != DBNull.Value ? Convert.ToDecimal(reader["tarja_kg"]) : 0,
-                    SaldoKg = reader["saldo_kg"] != DBNull.Value ? Convert.ToDecimal(reader["saldo_kg"]) : 0,
-                    Lote = reader["lote"]?.ToString() ?? "",
-                    Estado = reader["estado"]?.ToString() ?? "",
-                    Salida = reader["salida"]?.ToString() ?? ""
-                });
+                items.Add(
+                    new ConsumoPapelItem
+                    {
+                        Id = reader["id"] != DBNull.Value ? Convert.ToInt32(reader["id"]) : 0,
+                        Fecha =
+                            reader["fecha"] != DBNull.Value
+                                ? Convert.ToDateTime(reader["fecha"])
+                                : DateTime.MinValue,
+                        Descripcion = reader["descripcion"]?.ToString() ?? "",
+                        Codigo = reader["codigo"]?.ToString() ?? "",
+                        ConsumoKg =
+                            reader["consumo_kg"] != DBNull.Value
+                                ? Convert.ToDecimal(reader["consumo_kg"])
+                                : 0,
+                        NP = reader["np"]?.ToString() ?? "",
+                        TarjaKg =
+                            reader["tarja_kg"] != DBNull.Value
+                                ? Convert.ToDecimal(reader["tarja_kg"])
+                                : 0,
+                        SaldoKg =
+                            reader["saldo_kg"] != DBNull.Value
+                                ? Convert.ToDecimal(reader["saldo_kg"])
+                                : 0,
+                        Lote = reader["lote"]?.ToString() ?? "",
+                        Estado = reader["estado"]?.ToString() ?? "",
+                        Salida = reader["salida"]?.ToString() ?? "",
+                    }
+                );
             }
 
             await reader.CloseAsync();
@@ -140,7 +154,8 @@ namespace LogisticControlCenter.Repositories.ConsumoPapel
 
             var kpi = new ConsumoKpiItem();
 
-            string sql = @"
+            string sql =
+                @"
                 SELECT 
                     SUM(CASE 
                         WHEN fecha >= CURDATE() 
@@ -157,8 +172,12 @@ namespace LogisticControlCenter.Repositories.ConsumoPapel
 
             if (await reader.ReadAsync())
             {
-                kpi.ConsumoHoy = reader["consumoHoy"] != DBNull.Value ? Convert.ToDecimal(reader["consumoHoy"]) : 0;
-                kpi.TarjasHoy = reader["tarjasHoy"] != DBNull.Value ? Convert.ToInt32(reader["tarjasHoy"]) : 0;
+                kpi.ConsumoHoy =
+                    reader["consumoHoy"] != DBNull.Value
+                        ? Convert.ToDecimal(reader["consumoHoy"])
+                        : 0;
+                kpi.TarjasHoy =
+                    reader["tarjasHoy"] != DBNull.Value ? Convert.ToInt32(reader["tarjasHoy"]) : 0;
             }
 
             await reader.CloseAsync();
@@ -194,7 +213,8 @@ namespace LogisticControlCenter.Repositories.ConsumoPapel
             {
                 foreach (var c in cambios)
                 {
-                    string sql = @"
+                    string sql =
+                        @"
                         UPDATE tarjas_scan
                         SET estado = @estado,
                             salida = @salida

@@ -33,9 +33,18 @@ if (!window.InicioController) {
                 document.getElementById("bins-count").innerText = data.total?.bins || 0
                 document.getElementById("lavado-count").innerText = data.total?.lavado || 0
                 document.getElementById("palets-count").innerText = data.total?.palets || 0
+
+                const paletizadoRes = await window.PhotinoBridge.send({
+                    action: "paletizado.obtenerKPI"
+                })
+
+                if (paletizadoRes && paletizadoRes.ok !== false) {
+                    const el = document.getElementById("paletizado-count")
+                    if (el) el.innerText = paletizadoRes.data?.total || 0
+                }
+
                 document.getElementById("consumo-count").innerText = data.total?.consumo || 0
                 document.getElementById("altillo-count").innerText = data.total?.altillo || 0
-
                 return data
 
             } catch (err) {
@@ -49,27 +58,28 @@ if (!window.InicioController) {
         // =========================
         renderGraficos(data) {
             if (!data) return
-        
+
             this.renderGraficoMovimientos(data)
             this.renderGraficoDistribucion(data)
-        
-            
+
+
             this.renderActividad(data.actividad || [])
-            this.renderAlertas(data.alertas || [])        }
+            this.renderAlertas(data.alertas || [])
+        }
 
         renderGraficoMovimientos(data) {
             const ctx = document.getElementById("chart-movimientos")
-        
+
             if (!ctx) {
                 console.warn("⚠️ No existe canvas chart-movimientos")
                 return
             }
-        
+
             // 🔥 EVITAR DUPLICADOS
             if (this.chartMovimientos) {
                 this.chartMovimientos.destroy()
             }
-        
+
             this.chartMovimientos = new Chart(ctx, {
                 type: 'bar',
                 data: {
@@ -110,17 +120,17 @@ if (!window.InicioController) {
 
         renderGraficoDistribucion(data) {
             const ctx = document.getElementById("chart-distribucion")
-        
+
             if (!ctx) {
                 console.warn("⚠️ No existe canvas chart-distribucion")
                 return
             }
-        
+
             // 🔥 EVITAR DUPLICADOS
             if (this.chartDistribucion) {
                 this.chartDistribucion.destroy()
             }
-        
+
             this.chartDistribucion = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
@@ -159,42 +169,42 @@ if (!window.InicioController) {
         }
         renderActividad(actividad) {
             const container = document.getElementById("actividad-reciente")
-        
+
             if (!container) {
                 console.warn("⚠️ No existe actividad-reciente")
                 return
             }
-        
+
             container.innerHTML = ""
-        
+
             actividad.forEach(item => {
-        
+
                 const div = document.createElement("div")
                 div.className = "activity-item"
-        
+
                 div.innerHTML = `
                     <span>${item.descripcion}</span>
                     <span>${this.formatearTiempo(item.fecha)}</span>
                 `
-        
+
                 container.appendChild(div)
             })
         }
         renderAlertas(alertas) {
             const container = document.getElementById("alertas-list")
-        
+
             if (!container) {
                 console.warn("⚠️ No existe alertas-list")
                 return
             }
-        
+
             container.innerHTML = ""
-        
+
             if (!alertas.length) {
                 container.innerHTML = `<div class="alert-ok">✔ Sistema sin problemas</div>`
                 return
             }
-        
+
             alertas.forEach(a => {
                 const div = document.createElement("div")
                 div.className = "alert-item"
@@ -204,18 +214,18 @@ if (!window.InicioController) {
         }
         formatearTiempo(fecha) {
             if (!fecha) return "-"
-        
+
             // 🔥 FIX formato MySQL (yyyy-MM-dd HH:mm:ss)
             const f = new Date(fecha.replace(" ", "T"))
-        
+
             if (isNaN(f)) return "-"
-        
+
             const now = new Date()
             const diff = Math.floor((now - f) / 60000)
-        
+
             if (diff < 1) return "Ahora"
             if (diff < 60) return `Hace ${diff} min`
-        
+
             const horas = Math.floor(diff / 60)
             return `Hace ${horas} h`
         }

@@ -27,7 +27,10 @@
     <!-- ========================= -->
     <div id="splash-screen">
         <div class="splash-content">
-            <img src="logo.png" class="splash-logo" />
+            <div class="splash-logos">
+                <img src="logo.png" class="splash-logo splash-logo-innpack" />
+                <img src="LOGO-FARET-spa-256.png" class="splash-logo splash-logo-faret" />
+            </div>
 
             <h1>Bienvenido</h1>
             <p class="splash-sub">Logistic Control Center</p>
@@ -54,7 +57,8 @@
                 <button data-module="altillo">🏗 Altillo</button>
                 <button data-module="bins">♻ BINS</button>
                 <button data-module="bins-lavado">🧼 Lavado BINS</button>
-                <button data-module="palets">📄 Palets</button>
+                <button data-module="palets">📄 Movimientos Palets Entre Plantas</button>
+                <button data-module="paletizado">📦 Sistema Paletizado</button>
                 <button data-module="bins-print">🖨 Impresión QR BINS</button>
                 <button id="btn-usuarios" data-module="usuarios" style="display: none;">👥 Gestión de Usuarios</button>
             </div>
@@ -69,7 +73,7 @@
                 </button>
             </div>
 
-            <div class="version">Version 0.1.0</div>
+            <div class="version">Version 2.1.5</div>
         </div>
     </div>
 
@@ -142,10 +146,15 @@
                 try {
                     const data = JSON.parse(message);
 
+                    if (data.type === "update_notice") {
+                        alert(data.message);
+                        return;
+                    }
+
                     const callback = this._callbacks[data.id];
 
                     if (callback) {
-                        callback(data.data); // ✅ FIX CLAVE
+                        callback(data.data);
                         delete this._callbacks[data.id];
                     }
 

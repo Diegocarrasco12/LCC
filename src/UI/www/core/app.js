@@ -176,15 +176,15 @@ console.log("🔥 APP INICIO");
     function refreshSidebarState() {
         const usuariosBtn = document.getElementById("btn-usuarios");
         const sidebarUsername = document.getElementById("sidebar-username");
-    
+
         const rolUsuario = sessionStorage.getItem("rolUsuario");
         const nombreUsuario = sessionStorage.getItem("nombreUsuario");
         const codigoUsuario = sessionStorage.getItem("codigoUsuario");
-    
+
         if (sidebarUsername) {
             sidebarUsername.innerText = nombreUsuario || codigoUsuario || "-";
         }
-    
+
         if (usuariosBtn) {
             if (rolUsuario === "admin" || rolUsuario === "admin_ti") {
                 usuariosBtn.style.display = "block";
@@ -207,7 +207,7 @@ console.log("🔥 APP INICIO");
             console.error("❌ No se encontraron botones del sidebar");
         }
         refreshSidebarState();
-      
+
 
         buttons.forEach(btn => {
             btn.addEventListener("click", () => {
@@ -257,6 +257,7 @@ console.log("🔥 APP INICIO");
             });
         }
     }
+
 
     function initApp() {
         console.log("🔥 INIT APP");

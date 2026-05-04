@@ -6,6 +6,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <ApplicationIcon>lcc_logo.ico</ApplicationIcon>
+    <Version>2.1.5</Version>
+    <AssemblyVersion>2.1.5</AssemblyVersion>
+    <FileVersion>2.1.5</FileVersion>
   </PropertyGroup>
 
   <!-- DEPENDENCIAS -->
@@ -29,5 +32,12 @@
     </Content>
 
   </ItemGroup>
+  <!-- ICONO APP -->
+<ItemGroup>
+  <None Include="lcc_logo.ico">
+    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+  </None>
+</ItemGroup>
 
 </Project>

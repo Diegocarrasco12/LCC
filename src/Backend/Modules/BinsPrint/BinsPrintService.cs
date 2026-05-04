@@ -33,17 +33,18 @@ namespace LogisticControlCenter.Modules.BinsPrint
                 // =========================
                 // ZPL (IGUAL AL PHP)
                 // =========================
-                var zpl = "^XA\n"
-                        + "^PW1160\n"
-                        + "^LL1344\n"
-                        + "^LH0,0\n"
-                        + "^FO195,120\n"
-                        + "^BQN,2,23\n"
-                        + $"^FDLA,{qrUrl}^FS\n"
-                        + "^FO420,960\n"
-                        + "^A0N,120,120\n"
-                        + $"^FDBIN {bin}^FS\n"
-                        + "^XZ\n";
+                var zpl =
+                    "^XA\n"
+                    + "^PW1160\n"
+                    + "^LL1344\n"
+                    + "^LH0,0\n"
+                    + "^FO195,120\n"
+                    + "^BQN,2,23\n"
+                    + $"^FDLA,{qrUrl}^FS\n"
+                    + "^FO420,960\n"
+                    + "^A0N,120,120\n"
+                    + $"^FDBIN {bin}^FS\n"
+                    + "^XZ\n";
 
                 // =========================
                 // ENVÍO A ZEBRA

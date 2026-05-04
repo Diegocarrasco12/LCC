@@ -12,7 +12,7 @@ if (!window.PaletsController) {
             this.limit = 20
             this.pages = 1
             this.loading = false
-        
+
             this._eventsBound = false
             this.exportando = false
         }
@@ -43,33 +43,34 @@ if (!window.PaletsController) {
 
             if (this._eventsBound) return
             this._eventsBound = true
-        
+
             if (!this._clickHandler) {
-        
+                if (!document.getElementById("tbodyPalets")) return
+
                 this._clickHandler = (e) => {
-        
+
                     if (e.target.id === "btnBuscar") {
                         if (this.loading) return
                         this.page = 1
                         this.cargarDatos()
                     }
-        
+
                     if (e.target.id === "btnLimpiar") {
                         this.limpiarFiltros()
                         this.page = 1
                         this.cargarDatos()
                     }
-        
+
                     if (e.target.id === "btnExportar") {
                         this.exportarExcel()
                     }
-        
+
                     if (e.target.dataset.page) {
                         this.page = Number(e.target.dataset.page)
                         this.cargarDatos()
                     }
                 }
-        
+
                 document.addEventListener("click", this._clickHandler)
             }
         }
@@ -161,9 +162,9 @@ if (!window.PaletsController) {
 
             if (this.exportando) return
             this.exportando = true
-        
+
             try {
-        
+
                 const res = await window.PhotinoBridge.send({
                     action: "palets.exportarExcel",
                     data: {
@@ -174,17 +175,17 @@ if (!window.PaletsController) {
                         tipo: this.getVal("filtroTipo")
                     }
                 })
-        
+
                 if (!res || res.ok === false) {
                     throw new Error(res?.error || "Error exportando")
                 }
-        
+
                 if (res.path) {
                     window.open(res.path, "_blank")
                 } else {
                     alert("Archivo generado")
                 }
-        
+
             } catch (err) {
                 console.error("❌ EXPORT ERROR:", err)
                 alert("Error exportando")
@@ -290,7 +291,7 @@ if (!window.PaletsController) {
 
             container.innerHTML = html
 
-           
+
         }
 
         // =========================
@@ -321,6 +322,15 @@ if (!window.PaletsController) {
 
         destroy() {
             console.log("🧹 Destroy PaletsController")
+
+            if (this._clickHandler) {
+                document.removeEventListener("click", this._clickHandler)
+            }
+
+            this._clickHandler = null
+            this._eventsBound = false
+            this.loading = false
+            this.exportando = false
         }
     }
 

@@ -1,7 +1,7 @@
-using System.Text.Json;
-using LogisticControlCenter.Services;
-using ClosedXML.Excel;
 using System.Diagnostics;
+using System.Text.Json;
+using ClosedXML.Excel;
+using LogisticControlCenter.Services;
 
 namespace LogisticControlCenter.Modules.ConsumoPapel
 {
@@ -38,12 +38,12 @@ namespace LogisticControlCenter.Modules.ConsumoPapel
                         return Error($"Acción no reconocida: {action}");
                 }
             }
-           catch (Exception ex)
-{
-    Console.WriteLine($"❌ ERROR HANDLER: {ex}");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ ERROR HANDLER: {ex}");
 
-    return Error(ex.Message); // 🔥 ESTE ES EL CAMBIO
-}
+                return Error(ex.Message); // 🔥 ESTE ES EL CAMBIO
+            }
         }
 
         private async Task<string> ObtenerConsumos(Dictionary<string, object>? data)
@@ -56,29 +56,40 @@ namespace LogisticControlCenter.Modules.ConsumoPapel
             string codigo = GetString(data, "codigo");
             string lote = GetString(data, "lote");
 
-            var result = await _service.ObtenerConsumos(page, limit, fechaDesde, fechaHasta, codigo, lote);
-
-            return Ok(new
-            {
-                items = result.Items ?? new List<ConsumoPapelItem>(),
+            var result = await _service.ObtenerConsumos(
                 page,
-                pages = result.Pages,
-                total = result.Total
-            });
+                limit,
+                fechaDesde,
+                fechaHasta,
+                codigo,
+                lote
+            );
+
+            return Ok(
+                new
+                {
+                    items = result.Items ?? new List<ConsumoPapelItem>(),
+                    page,
+                    pages = result.Pages,
+                    total = result.Total,
+                }
+            );
         }
 
         private async Task<string> ObtenerKpis()
         {
             var kpis = await _service.ObtenerKpis();
 
-            return Ok(new
-            {
-                consumoHoy = kpis.ConsumoHoy,
-                tarjasHoy = kpis.TarjasHoy,
-                saldoTotal = kpis.SaldoTotal,
-                ultimoCodigo = kpis.UltimoCodigo,
-                ultimoLote = kpis.UltimoLote
-            });
+            return Ok(
+                new
+                {
+                    consumoHoy = kpis.ConsumoHoy,
+                    tarjasHoy = kpis.TarjasHoy,
+                    saldoTotal = kpis.SaldoTotal,
+                    ultimoCodigo = kpis.UltimoCodigo,
+                    ultimoLote = kpis.UltimoLote,
+                }
+            );
         }
 
         private async Task<string> GuardarCambios(Dictionary<string, object>? payload)
@@ -102,7 +113,14 @@ namespace LogisticControlCenter.Modules.ConsumoPapel
             string codigo = GetString(data, "codigo");
             string lote = GetString(data, "lote");
 
-            var result = await _service.ObtenerConsumos(1, limit, fechaDesde, fechaHasta, codigo, lote);
+            var result = await _service.ObtenerConsumos(
+                1,
+                limit,
+                fechaDesde,
+                fechaHasta,
+                codigo,
+                lote
+            );
 
             if (result.Items == null || result.Items.Count == 0)
                 return Error("No hay datos para exportar");
@@ -114,7 +132,20 @@ namespace LogisticControlCenter.Modules.ConsumoPapel
             {
                 var ws = workbook.Worksheets.Add("Consumos");
 
-                string[] headers = { "ID","Fecha","Descripción","Código","ConsumoKg","NP","TarjaKg","SaldoKg","Lote","Estado","Salida" };
+                string[] headers =
+                {
+                    "ID",
+                    "Fecha",
+                    "Descripción",
+                    "Código",
+                    "ConsumoKg",
+                    "NP",
+                    "TarjaKg",
+                    "SaldoKg",
+                    "Lote",
+                    "Estado",
+                    "Salida",
+                };
 
                 for (int i = 0; i < headers.Length; i++)
                     ws.Cell(1, i + 1).Value = headers[i];
@@ -138,11 +169,7 @@ namespace LogisticControlCenter.Modules.ConsumoPapel
                 }
 
                 workbook.SaveAs(filePath);
-                Process.Start(new ProcessStartInfo
-{
-    FileName = filePath,
-    UseShellExecute = true
-});
+                Process.Start(new ProcessStartInfo { FileName = filePath, UseShellExecute = true });
             }
 
             return Ok(new { path = filePath });
@@ -164,22 +191,26 @@ namespace LogisticControlCenter.Modules.ConsumoPapel
 
         private string Ok(object? data)
         {
-            return JsonSerializer.Serialize(new
-            {
-                ok = true,
-                data,
-                error = (string?)null
-            });
+            return JsonSerializer.Serialize(
+                new
+                {
+                    ok = true,
+                    data,
+                    error = (string?)null,
+                }
+            );
         }
 
         private string Error(string message)
         {
-            return JsonSerializer.Serialize(new
-            {
-                ok = false,
-                data = (object?)null,
-                error = message
-            });
+            return JsonSerializer.Serialize(
+                new
+                {
+                    ok = false,
+                    data = (object?)null,
+                    error = message,
+                }
+            );
         }
 
         private static string GetString(Dictionary<string, object>? data, string key)
@@ -227,14 +258,16 @@ namespace LogisticControlCenter.Modules.ConsumoPapel
             {
                 try
                 {
-                    result.Add(new ConsumoCambioItem
-                    {
-                        Id = item.GetProperty("id").GetInt32(),
-                        Estado = item.GetProperty("estado").GetString() ?? "",
-                        Salida = item.GetProperty("salida").GetString() ?? ""
-                    });
+                    result.Add(
+                        new ConsumoCambioItem
+                        {
+                            Id = item.GetProperty("id").GetInt32(),
+                            Estado = item.GetProperty("estado").GetString() ?? "",
+                            Salida = item.GetProperty("salida").GetString() ?? "",
+                        }
+                    );
                 }
-                catch {}
+                catch { }
             }
 
             Console.WriteLine($"📦 CAMBIOS RECIBIDOS: {result.Count}");

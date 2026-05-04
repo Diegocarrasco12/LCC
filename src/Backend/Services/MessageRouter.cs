@@ -8,6 +8,7 @@ using LogisticControlCenter.Modules.Bins;
 using LogisticControlCenter.Modules.BinsLavado;
 using LogisticControlCenter.Modules.ConsumoPapel;
 using LogisticControlCenter.Modules.Home;
+using LogisticControlCenter.Modules.Paletizado;
 using LogisticControlCenter.Modules.Palets;
 using LogisticControlCenter.Modules.Usuarios;
 
@@ -110,6 +111,11 @@ namespace LogisticControlCenter.Services
                 else if (action.StartsWith("palets"))
                 {
                     var handler = new PaletsHandler(_db);
+                    rawResult = await handler.Handle(action, data);
+                }
+                else if (action.StartsWith("paletizado"))
+                {
+                    var handler = new PaletizadoHandler(_db);
                     rawResult = await handler.Handle(action, data);
                 }
                 else if (action.StartsWith("inicio"))
