@@ -96,3 +96,15 @@ debug.log
 # =========================
 *.db
 *.sqlite
+# Sensitive config/services
+src/Backend/Services/DbService.cs
+
+# Updates folder
+LCC_Updates/
+update/
+updates/
+
+# Local config
+config.json
+*.env
+.env
