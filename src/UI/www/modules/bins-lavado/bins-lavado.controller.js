@@ -29,13 +29,17 @@ if (!window.BinsLavadoController) {
                 console.warn("⚠ flatpickr no cargado")
                 return
             }
-
+        
             flatpickr("#fechaDesde", {
+                altInput: true,
+                altFormat: "d/m/Y",
                 dateFormat: "Y-m-d",
                 allowInput: true
             })
-
+        
             flatpickr("#fechaHasta", {
+                altInput: true,
+                altFormat: "d/m/Y",
                 dateFormat: "Y-m-d",
                 allowInput: true
             })

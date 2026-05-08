@@ -249,6 +249,13 @@ console.log("🔥 APP INICIO");
                 sessionStorage.removeItem("nombreUsuario");
                 sessionStorage.removeItem("rolUsuario");
 
+                localStorage.removeItem("lcc_remember_login");
+                localStorage.removeItem("lcc_nombreUsuario");
+                localStorage.removeItem("lcc_rolUsuario");
+                localStorage.removeItem("lcc_usuarioActivo");
+
+                // No borramos lcc_codigoUsuario para que el login quede autollenado
+
                 // 🔹 delay profesional
                 setTimeout(() => {
                     message.remove();
@@ -270,8 +277,26 @@ console.log("🔥 APP INICIO");
         }
 
         initSidebar();
-        App.loadModule("auth");
 
+        const isLoggedIn = localStorage.getItem("lcc_remember_login") === "true";
+        const codigoUsuario = localStorage.getItem("lcc_codigoUsuario");
+        const nombreUsuario = localStorage.getItem("lcc_nombreUsuario");
+        const rolUsuario = localStorage.getItem("lcc_rolUsuario");
+
+        if (isLoggedIn && codigoUsuario) {
+            console.log("✅ Sesión recordada encontrada");
+
+            sessionStorage.setItem("isLoggedIn", "true");
+            sessionStorage.setItem("codigoUsuario", codigoUsuario);
+            sessionStorage.setItem("nombreUsuario", nombreUsuario || codigoUsuario);
+            sessionStorage.setItem("rolUsuario", rolUsuario || "");
+
+            refreshSidebarState();
+            App.loadModule("inicio");
+            return;
+        }
+
+        App.loadModule("auth");
     }
 
     // ==============================

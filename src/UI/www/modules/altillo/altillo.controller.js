@@ -35,9 +35,20 @@ if (!window.AltilloController) {
 
         initDatePickers() {
             if (typeof flatpickr === "undefined") return
-
-            flatpickr("#filtroFechaDesde", { dateFormat: "Y-m-d" })
-            flatpickr("#filtroFechaHasta", { dateFormat: "Y-m-d" })
+        
+            flatpickr("#filtroFechaDesde", {
+                altInput: true,
+                altFormat: "d/m/Y",
+                dateFormat: "Y-m-d",
+                allowInput: true
+            })
+        
+            flatpickr("#filtroFechaHasta", {
+                altInput: true,
+                altFormat: "d/m/Y",
+                dateFormat: "Y-m-d",
+                allowInput: true
+            })
         }
 
         bindEvents() {

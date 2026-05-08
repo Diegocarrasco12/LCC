@@ -97,6 +97,7 @@ body {
     min-width: 0;
     overflow: hidden;
 }
+
 .main {
     overflow: hidden;
 }
@@ -147,7 +148,7 @@ body {
 .workspace {
     flex: 1;
     padding: 24px 32px;
-    display: block; 
+    display: block;
     overflow: auto;
     min-width: 0;
 }
@@ -303,6 +304,7 @@ button:disabled {
     min-width: 1400px;
     border-collapse: collapse;
 }
+
 .table-container {
     white-space: nowrap;
 }
@@ -387,11 +389,13 @@ button:disabled {
     background: #94A3B8;
     border-radius: 6px;
 }
+
 /* ========================= */
 /* RESPONSIVE BASE */
 /* ========================= */
 
-html, body {
+html,
+body {
     overflow: hidden;
 }
 
@@ -438,6 +442,7 @@ html, body {
 .table td {
     padding: 8px 10px;
 }
+
 /* ========================= */
 /* SCROLL PRO */
 /* ========================= */
@@ -460,6 +465,7 @@ html, body {
 .table-container::-webkit-scrollbar-thumb:hover {
     background: #475569;
 }
+
 /* ========================= */
 /* CENTER MODULE (FORMULARIOS) */
 /* ========================= */
@@ -475,6 +481,7 @@ html, body {
     width: 100%;
     max-width: 500px;
 }
+
 /* =====================================================
    🏠 HOME DASHBOARD PRO (MEJORADO NIVEL UI/UX)
 ===================================================== */
@@ -501,7 +508,7 @@ html, body {
     border-radius: 18px;
     padding: 20px;
     border: 1px solid #E2E8F0;
-    box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
     cursor: pointer;
     transition: all 0.25s ease;
     position: relative;
@@ -513,7 +520,7 @@ html, body {
     content: "";
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle at top left, rgba(59,130,246,0.15), transparent);
+    background: radial-gradient(circle at top left, rgba(59, 130, 246, 0.15), transparent);
     opacity: 0;
     transition: 0.3s;
 }
@@ -525,7 +532,7 @@ html, body {
 /* HOVER */
 .home-module .home-module-card:hover {
     transform: translateY(-6px) scale(1.01);
-    box-shadow: 0 20px 45px rgba(0,0,0,0.12);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.12);
     border-color: #93C5FD;
 }
 
@@ -559,7 +566,7 @@ html, body {
     border-radius: 16px;
     border: 1px solid #E2E8F0;
     background: white;
-    box-shadow: 0 10px 28px rgba(0,0,0,0.06);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.06);
     padding: 18px;
 }
 
@@ -636,6 +643,7 @@ html, body {
     transform: translateY(-1px);
     opacity: 0.9;
 }
+
 /* =========================
    📊 CHARTS (MEJORA VISUAL)
 ========================= */
@@ -656,14 +664,16 @@ html, body {
 }
 
 .home-module .card:hover {
-    box-shadow: 0 14px 35px rgba(0,0,0,0.08);
+    box-shadow: 0 14px 35px rgba(0, 0, 0, 0.08);
 }
+
 /* títulos de gráficos más limpios */
 .home-module .card .module-title {
     display: flex;
     align-items: center;
     gap: 6px;
 }
+
 /* =====================================================
    🏠 HOME RESPONSIVE PRO (SOLO DASHBOARD)
 ===================================================== */
@@ -703,6 +713,7 @@ html, body {
     grid-template-columns: 2fr 1fr;
     gap: 20px;
 }
+
 .splash-logos {
     display: flex;
     justify-content: center;
@@ -739,6 +750,7 @@ html, body {
         grid-template-columns: 1fr;
     }
 }
+
 /* ========================= */
 /* SPLASH SCREEN */
 /* ========================= */
@@ -756,7 +768,8 @@ html, body {
     justify-content: center;
     align-items: center;
 
-    z-index: 999999; /* 🔥 CLAVE */
+    z-index: 999999;
+    /* 🔥 CLAVE */
     transition: opacity 0.5s ease;
 }
 
@@ -773,10 +786,11 @@ html, body {
     font-size: 16px;
     opacity: 0.8;
 }
+
 .progress-bar {
     width: 330px;
     height: 6px;
-    background: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 10px;
     overflow: hidden;
     margin-top: 20px;
@@ -788,6 +802,7 @@ html, body {
     background: linear-gradient(90deg, #38bdf8, #22c55e);
     transition: width 0.4s ease;
 }
+
 .splash-logo {
     margin-bottom: 0;
     opacity: 0.95;
@@ -807,10 +822,12 @@ html, body {
     background: linear-gradient(90deg, #38bdf8, #22c55e);
     transition: width 0.6s ease;
 }
+
 .topbar {
     position: fixed;
     top: 0;
-    left: 260px; /* respeta sidebar */
+    left: 260px;
+    /* respeta sidebar */
     right: 0;
     height: 38px;
 
@@ -874,7 +891,7 @@ html, body {
     background: rgba(255, 255, 255, 0.05);
     padding: 14px;
     border-radius: 12px;
-    border: 1px solid rgba(255,255,255,0.06);
+    border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .sidebar-session-label {
@@ -912,4 +929,35 @@ html, body {
 
 .sidebar-logout-btn:active {
     transform: translateY(0);
+}
+
+/* =========================
+   CONSUMO PAPEL - AJUSTE COLUMNAS
+   SOLO ESTE MODULO
+========================= */
+
+#tablaConsumos {
+    white-space: nowrap;
+}
+
+#tablaConsumos td:nth-child(2) {
+    max-width: 360px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#tablaConsumos td:nth-child(4),
+#tablaConsumos td:nth-child(6),
+#tablaConsumos td:nth-child(7) {
+    width: 80px;
+}
+
+#tablaConsumos td:nth-child(10),
+#tablaConsumos td:nth-child(11) {
+    width: 150px;
+}
+
+#tablaConsumos td input {
+    width: 100%;
+    min-width: 120px;
 }

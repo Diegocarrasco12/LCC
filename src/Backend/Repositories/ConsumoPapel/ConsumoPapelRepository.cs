@@ -72,8 +72,9 @@ namespace LogisticControlCenter.Repositories.ConsumoPapel
                     np,
                     tarja_kg,
                     saldo_kg,
-                    lote,
-                    estado,
+lote,
+ubicacion_bin,
+estado,
                     salida
                 FROM tarjas_scan
                 {whereSql}
@@ -119,6 +120,7 @@ namespace LogisticControlCenter.Repositories.ConsumoPapel
                                 ? Convert.ToDecimal(reader["saldo_kg"])
                                 : 0,
                         Lote = reader["lote"]?.ToString() ?? "",
+                        UbicacionBin = reader["ubicacion_bin"]?.ToString() ?? "",
                         Estado = reader["estado"]?.ToString() ?? "",
                         Salida = reader["salida"]?.ToString() ?? "",
                     }

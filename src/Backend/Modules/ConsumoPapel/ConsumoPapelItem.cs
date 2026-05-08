@@ -20,6 +20,8 @@ namespace LogisticControlCenter.Modules.ConsumoPapel
 
         public string Lote { get; set; } = "";
 
+        public string UbicacionBin { get; set; } = "";
+
         public string Estado { get; set; } = "";
 
         public string Salida { get; set; } = "";

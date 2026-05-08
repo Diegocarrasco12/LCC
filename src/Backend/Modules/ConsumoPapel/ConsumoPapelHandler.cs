@@ -142,9 +142,10 @@ namespace LogisticControlCenter.Modules.ConsumoPapel
                     "NP",
                     "TarjaKg",
                     "SaldoKg",
-                    "Lote",
-                    "Estado",
-                    "Salida",
+                   "Lote",
+"Ubicación SAP",
+"Estado",
+"Salida",
                 };
 
                 for (int i = 0; i < headers.Length; i++)
@@ -163,8 +164,9 @@ namespace LogisticControlCenter.Modules.ConsumoPapel
                     ws.Cell(row, 7).Value = item.TarjaKg;
                     ws.Cell(row, 8).Value = item.SaldoKg;
                     ws.Cell(row, 9).Value = item.Lote;
-                    ws.Cell(row, 10).Value = item.Estado;
-                    ws.Cell(row, 11).Value = item.Salida;
+ws.Cell(row, 10).Value = item.UbicacionBin;
+ws.Cell(row, 11).Value = item.Estado;
+ws.Cell(row, 12).Value = item.Salida;
                     row++;
                 }
 

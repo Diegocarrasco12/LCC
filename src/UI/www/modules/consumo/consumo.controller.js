@@ -33,32 +33,32 @@ if (!window.ConsumoController) {
 
             if (this._eventsBound) return
             this._eventsBound = true
-        
+
             if (!this._clickHandler) {
-        
+
                 this._clickHandler = (e) => {
-        
+
                     if (e.target.id === "btnFiltrar") {
                         this.aplicarFiltros()
                     }
-        
+
                     if (e.target.id === "btnLimpiar") {
                         this.limpiarFiltros()
                     }
-        
+
                     if (e.target.id === "btnGuardar") {
                         this.guardarCambios()
                     }
-        
+
                     if (e.target.id === "btnExportar") {
                         this.exportarExcel()
                     }
-        
+
                     if (e.target.id === "btnActualizar") {
                         this.cargarConsumos()
                     }
                 }
-        
+
                 document.addEventListener("click", this._clickHandler)
             }
         }
@@ -136,7 +136,7 @@ if (!window.ConsumoController) {
             tbody.innerHTML = ""
 
             if (!data.length) {
-                tbody.innerHTML = `<tr><td colspan="11">Sin registros</td></tr>`
+                tbody.innerHTML = `<tr><td colspan="12">Sin registros</td></tr>`
                 return
             }
 
@@ -154,6 +154,7 @@ if (!window.ConsumoController) {
                     <td>${row.TarjaKg ?? ""}</td>
                     <td>${row.SaldoKg ?? ""}</td>
                     <td>${row.Lote ?? ""}</td>
+                    <td>${row.UbicacionBin ?? row.ubicacion_bin ?? ""}</td>
     
                     <td>
                         <input value="${row.Estado ?? ""}" 
@@ -368,11 +369,11 @@ if (!window.ConsumoController) {
                 console.warn("⚠ Ya se está exportando...")
                 return
             }
-        
+
             this.exportando = true
-        
+
             try {
-        
+
                 const res = await window.PhotinoBridge.send({
                     action: "consumo.exportarExcel",
                     data: {
@@ -382,13 +383,13 @@ if (!window.ConsumoController) {
                         lote: document.getElementById("filtroLote")?.value || ""
                     }
                 })
-        
+
                 if (!res || res.ok === false) {
                     alert("Error al exportar")
                     return
                 }
-        
-                alert("✅ Excel generado correctamente\n\n📂 Ubicación:\n" + res.data?.path)        
+
+                alert("✅ Excel generado correctamente\n\n📂 Ubicación:\n" + res.data?.path)
             } catch (err) {
                 console.error("❌ exportarExcel:", err)
             } finally {
@@ -428,8 +429,19 @@ if (!window.ConsumoController) {
 
         iniciarCalendarios() {
             if (window.flatpickr) {
-                flatpickr("#filtroFechaDesde", { dateFormat: "Y-m-d" })
-                flatpickr("#filtroFechaHasta", { dateFormat: "Y-m-d" })
+                flatpickr("#filtroFechaDesde", {
+                    altInput: true,
+                    altFormat: "d/m/Y",
+                    dateFormat: "Y-m-d",
+                    allowInput: true
+                })
+        
+                flatpickr("#filtroFechaHasta", {
+                    altInput: true,
+                    altFormat: "d/m/Y",
+                    dateFormat: "Y-m-d",
+                    allowInput: true
+                })
             }
         }
 
@@ -443,16 +455,16 @@ if (!window.ConsumoController) {
         }
         destroy() {
             console.log("🧹 Destroy ConsumoController")
-        
+
             if (this.autoRefreshTimer) {
                 clearInterval(this.autoRefreshTimer)
                 this.autoRefreshTimer = null
             }
-        
+
             if (this._clickHandler) {
                 document.removeEventListener("click", this._clickHandler)
             }
-        
+
             this._eventsBound = false
             this._clickHandler = null
             this.usuarioEditando = false

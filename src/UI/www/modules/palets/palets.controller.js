@@ -31,9 +31,20 @@ if (!window.PaletsController) {
         // =========================
         initDatePickers() {
             if (typeof flatpickr === "undefined") return
-
-            flatpickr("#fechaDesde", { dateFormat: "Y-m-d" })
-            flatpickr("#fechaHasta", { dateFormat: "Y-m-d" })
+        
+            flatpickr("#fechaDesde", {
+                altInput: true,
+                altFormat: "d/m/Y",
+                dateFormat: "Y-m-d",
+                allowInput: true
+            })
+        
+            flatpickr("#fechaHasta", {
+                altInput: true,
+                altFormat: "d/m/Y",
+                dateFormat: "Y-m-d",
+                allowInput: true
+            })
         }
 
         // =========================
